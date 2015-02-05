@@ -39,9 +39,6 @@ def shopping_cart():
                                 cart=empty_cart.iteritems(),
                                 total=total)
 
-    """TODO: Display the contents of the shopping cart. The shopping cart is a
-    list held in the session that contains all the melons to be added. Check
-    accompanying screenshots for details."""
     return render_template("cart.html", 
                            cart=session['cart'].iteritems(),
                            total=session['total'])
@@ -80,6 +77,15 @@ def show_login():
 
 @app.route("/login", methods=["POST"])
 def process_login():
+    # error = None
+    # if request.method == 'POST':
+    #     if (request.form['username'],
+    #         request.form['password']):
+    #         return log_the_user_in(request.form['username'])
+    #     else:
+    #         error = 'Invalid username/password'    
+
+
     """TODO: Receive the user's login credentials located in the 'request.form'
     dictionary, look up the user, and store them in the session."""
     return "Oops! This needs to be implemented"
