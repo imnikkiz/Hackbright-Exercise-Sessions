@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.secret_key = '\xf5!\x07!qj\xa4\x08\xc6\xf8\n\x8a\x95m\xe2\x04g\xbb\x98|U\xa2f\x03'
 app.jinja_env.undefined = jinja2.StrictUndefined
 
+
 @app.route("/")
 def index():
     """This is the 'cover' page of the ubermelon site"""
@@ -29,8 +30,8 @@ def show_melon(id):
 
 @app.route("/cart")
 def shopping_cart():
-    cart = session.get('cart', {})
-    if cart == {}:
+    cart = session.get('cart')
+    if not cart:
         empty_cart = {
             "No melons": {"qty": 0, "price": 0}
             }
@@ -66,29 +67,35 @@ def add_to_cart(id):
 
     print cart
 
-    return render_template("cart.html", 
-                           cart=session['cart'].iteritems(),
-                           total=session['total'])
+    return shopping_cart()
 
 @app.route("/login", methods=["GET"])
 def show_login():
+    if session.get('name'):
+        flash("You have successfully logged out.")
+        session.clear()
     return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
 def process_login():
-    # error = None
-    # if request.method == 'POST':
-    #     if (request.form['username'],
-    #         request.form['password']):
-    #         return log_the_user_in(request.form['username'])
-    #     else:
-    #         error = 'Invalid username/password'    
+    email = request.form.get('email')
+    password = request.form.get('password')
+    user = model.get_customer_by_email(email)
+
+    if user:
+        flash("Welcome "+user.givenname+"! You have successfully logged in.")
+        session['name'] = user.givenname
+
+    else:
+        flash("Oops, please check you login information again")
+        return render_template("login.html")
+   
 
 
     """TODO: Receive the user's login credentials located in the 'request.form'
     dictionary, look up the user, and store them in the session."""
-    return "Oops! This needs to be implemented"
+    return list_melons()
 
 
 @app.route("/checkout")
