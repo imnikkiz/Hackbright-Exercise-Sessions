@@ -5,8 +5,8 @@
 <div id="melon-list">
     {% for melon in melon_list %}
     <div class="melon-summary well">
-        <h2><a href="/melon/{{melon.id}}">{{melon.common_name}}</a></h2>
         <a href="/melon/{{melon.id}}">
+        <h2>{{melon.common_name}}</h2>
         <img src="{{melon.imgurl}}">
         </a>
         <h3>{{melon.price_str()}}</h3>

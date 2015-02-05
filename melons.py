@@ -24,28 +24,54 @@ def show_melon(id):
     """This page shows the details of a given melon, as well as giving an
     option to buy the melon."""
     melon = model.get_melon_by_id(id)
-    print melon
     return render_template("melon_details.html",
                   display_melon = melon)
 
 @app.route("/cart")
 def shopping_cart():
+    cart = session.get('cart', {})
+    if cart == {}:
+        empty_cart = {
+            "No melons": {"qty": 0, "price": 0}
+            }
+        total = 0
+        return render_template("cart.html",
+                                cart=empty_cart.iteritems(),
+                                total=total)
+
     """TODO: Display the contents of the shopping cart. The shopping cart is a
     list held in the session that contains all the melons to be added. Check
     accompanying screenshots for details."""
-    return render_template("cart.html")
+    return render_template("cart.html", 
+                           cart=session['cart'].iteritems(),
+                           total=session['total'])
 
 @app.route("/add_to_cart/<int:id>")
 def add_to_cart(id):
-    """TODO: Finish shopping cart functionality using session variables to hold
-    cart list.
+# id = melon id from melon_details.html
+    melon = model.get_melon_by_id(id)
+    cart = session.get('cart', {})
 
-    Intended behavior: when a melon is added to a cart, redirect them to the
-    shopping cart page, while displaying the message
-    "Successfully added to cart" """
 
-    return "Oops! This needs to be implemented!"
+    if melon.common_name in cart:
+        cart[melon.common_name]["qty"] +=1
+    else:
+        cart[melon.common_name]= {"qty":1, "price":melon.price}
 
+    flash("%s was sucessfully added to the cart!" % melon.common_name)
+
+    total = 0
+    for melon, info in cart.iteritems():
+        total += (info["qty"] * info["price"])
+
+    session['cart'] = cart
+    session['total'] = total
+
+    print cart
+
+    return render_template("cart.html", 
+                           cart=session['cart'].iteritems(),
+                           total=session['total'])
 
 @app.route("/login", methods=["GET"])
 def show_login():
