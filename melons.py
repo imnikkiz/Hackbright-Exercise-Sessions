@@ -83,9 +83,11 @@ def process_login():
     password = request.form.get('password')
     user = model.get_customer_by_email(email)
 
-    if user:
-        flash("Welcome "+user.givenname+"! You have successfully logged in.")
-        session['name'] = user.givenname
+
+
+    if user and password == user.password:
+            flash("Welcome "+user.givenname+"! You have successfully logged in.")
+            session['name'] = user.givenname
 
     else:
         flash("Oops, please check you login information again")

@@ -11,6 +11,9 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
+                        {% if session.get('name') %} 
+                        <li><a>Hi, {{ session.get('name') }}! </a></li> 
+                        {%endif%}
                         <li><a href="/cart"><img class="melon-cart" src="/static/img/watermelon.png"> My Melon Cart</a></li>
                         {% if session.get('name') %}
                         <li><a href="/login" id="login">Log Out</a></li>
@@ -22,9 +25,9 @@
             </div>
         </div>
         <div class="container">
-            {% if session.get('name') %} 
+<!--             {% if session.get('name') %} 
             <h4>Hi, {{ session.get('name') }}!</h4>  
-            {%endif%} 
+            {%endif%}  -->
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             {% for message in messages %}
